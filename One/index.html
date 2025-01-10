@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My GitHub Repositories</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; margin: 50px; }
+        #repo-list { list-style: none; padding: 0; }
+        li { margin: 10px 0; }
+        a { text-decoration: none; color: navy; }
+        a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <h1>GitHub 저장소 목록</h1>
+    <p>아래는 내 GitHub 저장소 목록입니다.</p>
+    <ul id="repo-list">로딩 중...</ul>
+
+    <script>
+        const username = "kankinku"; // 여기에 본인의 GitHub 아이디를 넣어주세요.
+
+        async function fetchRepos() {
+            try {
+                const response = await fetch(`https://api.github.com/users/${username}/repos`);
+                if (!response.ok) throw new Error("GitHub API 호출 실패");
+                
+                const repos = await response.json();
+                const repoListElement = document.getElementById("repo-list");
+                repoListElement.innerHTML = "";
+
+                repos.forEach(repo => {
+                    const listItem = document.createElement("li");
+                    listItem.innerHTML = `<a href="${repo.html_url}" target="_blank">${repo.name}</a>`;
+                    repoListElement.appendChild(listItem);
+                });
+            } catch (error) {
+                console.error("에러 발생:", error);
+                document.getElementById("repo-list").innerText = "저장소를 불러오는 데 실패했습니다.";
+            }
+        }
+
+        fetchRepos();
+    </script>
+</body>
+</html>
